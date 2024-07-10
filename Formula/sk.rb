@@ -18,11 +18,14 @@ class Sk < Formula
 
   test do
     (testpath/"script.sh").write <<~EOF
+      set -e
+
       [ -s #{pkgshare}/sk.sh ] && . #{pkgshare}/sk.sh
 
       sk help
     EOF
 
     system "bash", testpath/"script.sh"
+    system "zsh", testpath/"script.sh"
   end
 end
