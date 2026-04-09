@@ -1,8 +1,8 @@
 class Kamino < Formula
   desc "Cloning experts"
   homepage "https://github.com/packrat386/kamino"
-  url "https://github.com/packrat386/kamino/archive/refs/tags/v0.2.0.tar.gz"
-  sha256 "30f1f8b8c0fca8ddcacd74403f9ccdf1a5b3965a5601647b09f1f2bd1b12b7d3"
+  url "https://github.com/packrat386/kamino/archive/refs/tags/v0.3.0.tar.gz"
+  sha256 "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
   license "MIT"
 
   def install
