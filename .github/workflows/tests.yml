@@ -1,4 +1,4 @@
-name: brew test-bot
+name: test
 
 on:
   push:
@@ -7,35 +7,28 @@ on:
   pull_request:
 
 jobs:
-  test-bot:
+  test:
     strategy:
       matrix:
-        os: [ubuntu-24.04, macos-14, macos-15]
+        os: [ubuntu-latest, macos-latest]
     runs-on: ${{ matrix.os }}
     steps:
-      - name: Set up Homebrew
+      - name: set up Homebrew
         id: set-up-homebrew
-        uses: Homebrew/actions/setup-homebrew@master
+        uses: Homebrew/actions/setup-homebrew@main
 
-      - name: Cache Homebrew Bundler RubyGems
-        uses: actions/cache@v4
-        with:
-          path: ${{ steps.set-up-homebrew.outputs.gems-path }}
-          key: ${{ matrix.os }}-rubygems-${{ steps.set-up-homebrew.outputs.gems-hash }}
-          restore-keys: ${{ matrix.os }}-rubygems-
+      - name: tap HEAD
+        run: brew tap packrat386/tools-testing file://$(pwd)
 
-      - run: brew test-bot --only-cleanup-before
+      - name: install sk
+        run: brew install packrat386/tools-testing/sk
 
-      - run: brew test-bot --only-setup
+      - name: test sk
+        run: brew test packrat386/tools-testing/sk
+        if: runner.os != 'Linux' # zsh tests don't work on Ubuntu
 
-      - run: brew test-bot --only-tap-syntax
+      - name: install kamino
+        run: brew install packrat386/tools-testing/kamino
 
-      - run: brew test-bot --only-formulae
-        if: github.event_name == 'pull_request'
-
-      - name: Upload bottles as artifact
-        if: always() && github.event_name == 'pull_request'
-        uses: actions/upload-artifact@v4
-        with:
-          name: bottles_${{ matrix.os }}
-          path: '*.bottle.*'
+      - name: test kamino
+        run: brew test packrat386/tools-testing/kamino
